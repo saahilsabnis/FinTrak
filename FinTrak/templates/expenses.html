@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h1 style="text-align:center; padding-bottom: 10px; font-weight: bold;"> Expense history </h1>
+<!--Table-->
+<table class="table table-striped w-auto">
+
+    <!--Table head-->
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Category</th>
+            <th>Paid by</th>
+        </tr>
+    </thead>
+    <!--Table head-->
+
+    <!--Table body-->
+    <tbody>
+
+        {% set i = [1] %}
+        {% for items in history %}
+            {% if i[0] % 2 != 0 %} <tr class="table-info">
+            {% else %} <tr> {% endif %}
+                <th scope="row">{{ i[0] }}</th>
+                <td>{{ items.description }}</td>
+                <td>{{ items.amount }}</td>
+                <td>{{ items.date.strftime('%d-%m-%Y')}}</td>
+                <td>{{ items.category }}</td>
+                <td>{{ items.paidby }}</td>
+                {% if i.append(i.pop() + 1) %}{% endif %}
+            </tr>
+        {% endfor %}
+
+    </tbody>
+    <!--Table body-->
+
+</table>
+<!--Table-->
+
+{% endblock content %}

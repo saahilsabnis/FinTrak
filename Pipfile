@@ -1,0 +1,26 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pylint = "*"
+
+[packages]
+flask = "*"
+flask-sqlalchemy = "*"
+gunicorn = "*"
+flask-session = "*"
+datetime = "*"
+flask-wtf = "*"
+wtforms = {extras = ["email"], version = "*"}
+pylint-flask = "*"
+flask-bcrypt = "*"
+flask-login = "*"
+python-dateutil = "*"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = true

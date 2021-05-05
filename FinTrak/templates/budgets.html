@@ -1,0 +1,91 @@
+{% extends "layout.html" %}
+{% block content %}
+
+{% if current_user.is_authenticated %}
+<div class="container-fluid">
+    <h1 style="text-align: center;">Manage Budgets<h1>
+</div>
+
+<! Cards !>
+<div class="card-deck" style="padding-bottom: 20px; padding-top: 70px">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title text-white">Weekly budget</h5>
+                    <p class="card-text">Your current weekly budget is  ${{ weekcard }}</p>
+                </div>
+            </div>
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title text-white">Monthly budget</h5>
+                    <p class="card-text">Your current monthly budget is  ${{ monthcard }}</p>
+                </div>
+            </div>
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title text-white">Yearly budget</h5>
+                    <p class="card-text">Your current yearly budget is ${{ yearcard }}</p>
+                </div>
+            </div>
+        </div>
+
+<div class="container col-md-6">
+    <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4"></legend>
+
+            <div class="form-group">
+                {{ form.weeklybudget.label(class="form-control-label")}}
+
+                {% if form.weeklybudget.errors %}
+                {{ form.weeklybudget(class="form-control form-control-lg is-invalid", autofocus = true, placeholder = "Week") }}
+                <div class="invalid-feedback">
+                    {% for error in form.weeklybudget.errors %}
+                    <span> {{ error }} </span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.weeklybudget(class="form-control form-control-lg", autofocus = true, placeholder = "Week") }}
+                {% endif %}
+            </div>
+
+             <div class="form-group">
+                {{ form.monthlybudget.label(class="form-control-label")}}
+
+                {% if form.monthlybudget.errors %}
+                {{ form.monthlybudget(class="form-control form-control-lg is-invalid", autofocus = true, placeholder = "Month") }}
+                <div class="invalid-feedback">
+                    {% for error in form.monthlybudget.errors %}
+                    <span> {{ error }} </span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.monthlybudget(class="form-control form-control-lg", autofocus = true, placeholder = "Month") }}
+                {% endif %}
+            </div>
+
+            <div class="form-group">
+                {{ form.yearlybudget.label(class="form-control-label")}}
+
+                {% if form.yearlybudget.errors %}
+                {{ form.yearlybudget(class="form-control form-control-lg is-invalid", autofocus = true, placeholder = "Year") }}
+                <div class="invalid-feedback">
+                    {% for error in form.yearlybudget.errors %}
+                    <span> {{ error }} </span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.yearlybudget(class="form-control form-control-lg", autofocus = true, placeholder = "Year") }}
+                {% endif %}
+            </div>
+        </fieldset>
+
+        <div class="form-group">
+            <input type="submit" name = "btn" value="Add" class="btn btn-outline-info" />
+        </div>
+    </form>
+</div>
+
+{% endif %}
+
+{% endblock %}

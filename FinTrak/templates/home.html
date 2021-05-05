@@ -1,0 +1,258 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% if current_user.is_authenticated %}
+        <div class = "container-fluid">
+         <h1 style="text-align: center; font-weight: bold; padding-bottom: 10px">Dashboard<h1>
+        <a href="{{ url_for('addexpense') }}" style="text-decoration: none;"><button type="button"
+           class="btn btn-outline-primary btn-block btn-lg">Add Expense</button></a>
+        </div>
+
+
+        <! BUDGET CARDS !>
+        <div class="card-deck" style="padding-bottom: 20px; padding-top: 70px">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title text-white">Weekly budget</h5>
+                    <p class="card-text">You have spent ${{ weekcard[0] }} this week, which is {{ weekcard[2] }}% of your budget.</p>
+                </div>
+            </div>
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title text-white">Monthly budget</h5>
+                    <p class="card-text">You have spent ${{ monthcard[0] }} this month, which is {{ monthcard[2] }}% of your budget.</p>
+                </div>
+            </div>
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title text-white">Yearly budget</h5>
+                    <p class="card-text">You have spent ${{ yearcard[0] }} this year, which is {{ yearcard[2] }}% of your budget.</p>
+                </div>
+            </div>
+        </div>
+
+
+
+        <! RECENT EXPENSES !>
+        <h1 style="text-align:left; padding-bottom: 10px;"> Last five expenses</h1>
+        <small class="text-muted"> <a class="ml-2" href="{{ url_for('expenses') }}">(See all expenses)</a> </small>
+        <table class="table table-striped w-auto">
+        <!--Table head-->
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Paid by</th>
+            </tr>
+        </thead>
+        <!--Table head-->
+
+        <!--Table body-->
+        <tbody>
+
+            {% set i = [1] %}
+            {% for items in lastfive %}
+                {% if i[0] % 2 != 0 %} <tr class="table-info">
+                {% else %} <tr> {% endif %}
+                    <th scope="row">{{ i[0] }}</th>
+                    <td>{{ items.description }}</td>
+                    <td>{{ items.amount }}</td>
+                    <td>{{ items.date.strftime('%d-%m-%Y') }}</td>
+                    <td>{{ items.category }}</td>
+                    <td>{{ items.paidby }}</td>
+                    {% if i.append(i.pop() + 1) %}{% endif %}
+                </tr>
+            {% endfor %}
+
+        </tbody>
+        <!--Table body-->
+
+        </table>
+        <!--Table-->
+
+
+
+        <! CHARTS !>
+        <div class="container" style = "padding-top: 80px;">
+            <h1>Weekly Expenditure</h1>
+            <canvas id="weekchart"></canvas>
+        </div>
+
+        <script>
+            let weekchart = document.getElementById('weekchart').getContext('2d');
+
+            // Global Options
+            Chart.defaults.global.defaultFontFamily = 'Lato';
+            Chart.defaults.global.defaultFontSize = 18;
+            Chart.defaults.global.defaultFontColor = '#777';
+
+            let weekExpData = new Chart(weekchart, {
+                type: 'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                data: {
+                    labels: {{ weeklabels | tojson }},
+                    datasets: [{
+                        label: 'Amount',
+                        data: {{ weekdata | tojson }},
+                        //backgroundColor:'green',
+                        backgroundColor: 'rgba(255, 71, 26, 0.5)', //0,128,220
+                        borderWidth: 1,
+                        borderColor: '#777',
+                        hoverBorderWidth: 3,
+                        hoverBorderColor: '#000'
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: ' ',
+                        fontSize: 25
+                    },
+                    legend: {
+                        display: true,
+                        position: 'right',
+                        labels: {
+                            fontColor: '#000'
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 50,
+                            right: 0,
+                            bottom: 50,
+                            top: 0
+                        }
+                    },
+                    tooltips: {
+                        enabled: true
+                    }
+                }
+            });
+
+        </script>
+
+
+        <div class="container" style = "padding-top: 20px;">
+            <h1>Monthly Expenditure</h1>
+            <canvas id="monthchart"></canvas>
+        </div>
+
+        <script>
+            let monthchart = document.getElementById('monthchart').getContext('2d');
+            
+            // Global Options
+            Chart.defaults.global.defaultFontFamily = 'Lato';
+            Chart.defaults.global.defaultFontSize = 18;
+            Chart.defaults.global.defaultFontColor = '#777';
+
+            let monthExpData = new Chart(monthchart, {
+                type: 'line', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                data: {
+                    labels: {{ monthlabels | tojson }},
+                    datasets: [{
+                        label: 'Amount',
+                        data: {{ monthdata | tojson }},
+                        //backgroundColor:'green',
+                        backgroundColor: 'rgba(0, 128, 220, 0.5)', //255,71,26
+                        borderWidth: 1,
+                        borderColor: '#777',
+                        hoverBorderWidth: 3,
+                        hoverBorderColor: '#000'
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: ' ',
+                        fontSize: 25
+                    },
+                    legend: {
+                        display: true,
+                        position: 'right',
+                        labels: {
+                            fontColor: '#000'
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 50,
+                            right: 0,
+                            bottom: 50,
+                            top: 0
+                        }
+                    },
+                    tooltips: {
+                        enabled: true
+                    }
+                }
+            });    
+        </script>
+   
+
+        <div class="container" style = "padding-top: 20px;">
+            <h1>Expenses by Categories</h1>
+            <canvas id="categorychart"></canvas>
+        </div>
+
+        <script>
+            let categorychart = document.getElementById('categorychart').getContext('2d');
+            
+            // Global Options
+            Chart.defaults.global.defaultFontFamily = 'Lato';
+            Chart.defaults.global.defaultFontSize = 18;
+            Chart.defaults.global.defaultFontColor = '#777';
+
+            let categoryData = new Chart(categorychart, {
+                type: 'polarArea', // bar, horizontalBar, pie, line, doughnut, radar, polarArea
+                data: {
+                    labels: {{ catlabels | tojson }},
+                    datasets: [{
+                        label: 'Amount',
+                        data: {{ catdata | tojson }},
+                        backgroundColor: ['#ff6384', '#4bc0c0', '#ffcd56', '#c9cbcf', '#36a2eb', '#f04f4f', '#d067f0'],
+                        //backgroundColor: ['rgb(255, 99, 132)', 'rgb(75, 192, 192)', 'rgb(255, 205, 86)', 'rgb(201, 203, 207)', 'rgb(54, 162, 235)', 'rgb(240, 79, 79)', 'rgb(224, 103, 150)']
+                        //backgroundColor: ['#ff6384', '#ff36a2eb', '#42f5a7', "#ffce56", "#5142f5", '#f04f4f', '#cc65fe'], //255,71,26
+                        borderWidth: 1,
+                        borderColor: '#777',
+                        hoverBorderWidth: 3,
+                        hoverBorderColor: '#000'
+                    }]
+                },
+                options: {
+                    title: {
+                        display: true,
+                        text: ' ',
+                        fontSize: 25
+                    },
+                    legend: {
+                        display: true,
+                        position: 'right',
+                        labels: {
+                            fontColor: '#000'
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 50,
+                            right: 0,
+                            bottom: 50,
+                            top: 0
+                        }
+                    },
+                    tooltips: {
+                        enabled: true
+                    }
+                }
+            });    
+        </script>
+        
+    
+    {% else %}
+        <div class="container" style = "width: 800px; margin:0 auto">
+            <h1 style="text-align: center; padding-top:10px"> Welcome to FinTrak!</h1>
+            <h3 style="text-align: center">Your own expense tracker.</h3>
+            <div style ="text-align: center; padding-top: 5px"><a style="text-align: center" class="btn btn-primary" href="{{ url_for('register') }}" role="button">Sign Up</a></div>
+        </div>
+    {% endif %}
+{% endblock %}

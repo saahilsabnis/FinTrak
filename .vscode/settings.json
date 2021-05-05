@@ -1,0 +1,6 @@
+{
+    "python.pythonPath": "C:\\Users\\Aditi\\.virtualenvs\\FinTrak-22tH8Gw-\\Scripts\\python.exe",
+    "python.formatting.provider": "black",
+    "python.linting.pylintArgs": ["--load-plugins", "pylint-flask"],
+    "files.associations": {"*.html": "jinjahtml"}
+}
